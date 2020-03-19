@@ -7,7 +7,8 @@ public class Tab {
 
     public static final int tabHeight = 50;
     public static final int tabWidth = 180;
-    public static final String[] tabNames = {"Home", "ToDo", "Contacts", "Calculator", "Voice Memos", "Shortcuts"};
+    public static final String[] tabNames = {"Home", "To Do", "Contacts", "Calculator", "Voice Memos", "Shortcuts",
+                                                "Settings"};
 
     public static Rectangle tab(double x, double y, Color color) {
         Rectangle rect = new Rectangle();
@@ -16,7 +17,7 @@ public class Tab {
         rect.setHeight(tabHeight);
         rect.setWidth(tabWidth);
         rect.setFill(color);
-        rect.setStroke(Colors.DEFAULT_TAB_CLR);
+        rect.setStroke(Styling.DEFAULT_TAB_CLR);
         return rect;
     }
 

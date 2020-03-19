@@ -1,11 +1,13 @@
 package code;
 
+import com.sun.org.apache.xerces.internal.impl.xs.SchemaNamespaceSupport;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -16,7 +18,9 @@ import javafx.scene.image.ImageView;
 
 public class Main extends Application {
 
-    BorderPane pane; // main layout
+    // variables
+    BorderPane layout = new BorderPane(); // main layout
+    Pane menu = new Pane(); // menu layout
     final int tabCount = Tab.tabNames.length;
     Rectangle[] inactiveTab = new Rectangle[tabCount];
     Rectangle[] activeTab = new Rectangle[tabCount];
@@ -24,56 +28,94 @@ public class Main extends Application {
     ImageView[] tabIcons = new ImageView[tabCount];
     EventHandler[] menuInactiveHandler = new EventHandler[tabCount];
     EventHandler[] menuActiveHandler = new EventHandler[tabCount];
+    EventHandler[] menuClickedHandler = new EventHandler[tabCount];
+    Rectangle side = new Rectangle(Tab.tabWidth,Tab.tabHeight * tabCount + 1000, Styling.DEFAULT_TAB_CLR);
+    Scene scene = new Scene(layout,750,Tab.tabHeight * tabCount, Styling.BACKGROUND_CLR);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        pane = new BorderPane(); // main layout
+        menu.getChildren().add(side);
 
         // initialize side menu items
         for(int i=0; i < tabCount; i++) {
-            inactiveTab[i] = Tab.tab(0, Tab.tabHeight * i, Colors.DEFAULT_TAB_CLR);
-            activeTab[i] = Tab.tab(0, Tab.tabHeight * i, Colors.ACTIVE_TAB_CLR);
+            // initialize tabs
+            inactiveTab[i] = Tab.tab(0, Tab.tabHeight * i, Styling.DEFAULT_TAB_CLR);
+            activeTab[i] = Tab.tab(0, Tab.tabHeight * i, Styling.ACTIVE_TAB_CLR);
 
+            // initialize tab icons
             tabIcons[i] = new ImageView(new Image(Images.TABS[i]));
             tabIcons[i].setX(10);
             tabIcons[i].setY(i * Tab.tabHeight + 10);
 
+            // initialize tab icons
             tabTitles[i] = new Text(Tab.tabNames[i]);
             tabTitles[i].setFont(Font.font("Symbol", FontWeight.NORMAL, 15));
             tabTitles[i].setX(50);
             tabTitles[i].setY(i * Tab.tabHeight + 32);
             tabTitles[i].setFill(Color.WHITE);
-            pane.getChildren().addAll(inactiveTab[i], tabIcons[i], tabTitles[i]);
+            menu.getChildren().addAll(inactiveTab[i], tabIcons[i], tabTitles[i]);
         }
 
+        // inital layout
+        layout.setLeft(menu);
+        layout.setCenter(Home.home());
+        layout.setStyle(Styling.BACKGROUND_STYLE);
+
+        // load to-do items in list
+        ToDo.loadData();
+
+        // add events to tabs
         for(int i=0; i < tabCount; i++) {
             final int k = i;
+
             menuInactiveHandler[k] = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    pane.getChildren().removeAll(inactiveTab[k], tabIcons[k], tabTitles[k]);
-                    pane.getChildren().addAll(activeTab[k], tabIcons[k], tabTitles[k]);
+                    menu.getChildren().removeAll(inactiveTab[k], tabIcons[k], tabTitles[k]);
+                    menu.getChildren().addAll(activeTab[k], tabIcons[k], tabTitles[k]);
                 }
             };
 
             menuActiveHandler[k] = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    pane.getChildren().removeAll(activeTab[k], tabIcons[k], tabTitles[k]);
-                    pane.getChildren().addAll(inactiveTab[k], tabIcons[k], tabTitles[k]);
+                    menu.getChildren().removeAll(activeTab[k], tabIcons[k], tabTitles[k]);
+                    menu.getChildren().addAll(inactiveTab[k], tabIcons[k], tabTitles[k]);
+                }
+            };
+
+            menuClickedHandler[k] = new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if(k == 0) {
+                        layout.setCenter(Home.home());
+                    }
+                    else if(k == 1) {
+                        layout.setCenter(ToDo.todo());
+                    }
+                    else {
+                        layout.setCenter(Home.home());
+                    }
                 }
             };
 
             inactiveTab[i].addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET,menuInactiveHandler[k]);
             activeTab[i].addEventHandler(MouseEvent.MOUSE_EXITED_TARGET,menuActiveHandler[k]);
+            activeTab[i].addEventHandler(MouseEvent.MOUSE_CLICKED,menuClickedHandler[k]);
 
         }
 
         // main stage settings
         primaryStage.setTitle("Dashboard");
         primaryStage.getIcons().add(Images.ICON);
-        primaryStage.setScene(new Scene(pane,600,Tab.tabHeight * tabCount, Colors.BACKGROUND_CLR));
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        primaryStage.setOnCloseRequest(e -> {
+            ToDo.saveOnClose();
+            System.exit(0);
+        });
     }
 
     public static void main(String[] args) {
