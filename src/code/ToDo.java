@@ -1,6 +1,7 @@
 package code;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ScrollPane;
@@ -8,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.control.Label;
@@ -19,6 +21,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,7 +30,7 @@ public class ToDo {
 
     // variables
     protected static LinkedList<String> list = new LinkedList<>();
-    private static VBox items = new VBox(0);
+    private static VBox items = new VBox(2);
     private static ScrollPane scroll = new ScrollPane();
     protected static String todoFilePath = "src/files/to-do-items.txt";
 
@@ -37,7 +41,7 @@ public class ToDo {
         pane.setStyle(Styling.BACKGROUND_STYLE);
 
         // scroll pane settings
-        scroll.setPrefSize(550, 300);
+        scroll.setPrefSize(550, 275);
         scroll.setContent(items);
         scroll.setStyle(Styling.SCROLL_STYLE);
 
@@ -50,11 +54,22 @@ public class ToDo {
         HBox input = new HBox();
         input.setSpacing(10);
 
+        // top pane
+        ImageView checklist = new ImageView(Images.CHECKLIST);
+        Text toDoText = new Text();
+        toDoText.setText("To-Do List");
+        toDoText.setFill(Color.WHITE);
+        toDoText.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 19));
+        HBox titleTop = new HBox(10);
+        titleTop.setAlignment(Pos.CENTER_LEFT);
+        titleTop.setPadding(new Insets(2,0,5,0));
+        titleTop.getChildren().addAll(checklist, toDoText);
+
         // textfield to get to do item
         TextField textfield = new TextField();
-        textfield.setFont(Font.font("Symbol", FontWeight.BOLD, 14));
+        textfield.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 14));
         textfield.setStyle(Styling.TEXTFIELD_STYLE);
-        textfield.setMinWidth(445);
+        textfield.setMinWidth(440);
 
         // hit enter to add item
         textfield.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -69,7 +84,7 @@ public class ToDo {
 
         // add item by pressing button
         Button add = new Button("Add");
-        add.setFont(Font.font("Symbol", FontWeight.BOLD, 14));
+        add.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 14));
         add.setStyle(Styling.TEXT_BUTTON_STYLE);
         add.setOnMouseClicked(e -> {
             addItem(textfield.getText());
@@ -78,7 +93,7 @@ public class ToDo {
 
         // save to do list somewhere on computer
         Button save = new Button("Save");
-        save.setFont(Font.font("Symbol", FontWeight.BOLD, 14));
+        save.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 14));
         save.setStyle(Styling.TEXT_BUTTON_STYLE);
         save.setOnMouseClicked(e -> saveAs());
 
@@ -87,6 +102,7 @@ public class ToDo {
         input.getChildren().addAll(textfield, add, save);
         updateList();
 
+        pane.setTop(titleTop);
         pane.setBottom(input);
         pane.setCenter(outer);
         return pane;
@@ -112,11 +128,11 @@ public class ToDo {
 
         // label settings
         Label label = new Label();
-        label.setFont(Font.font("Symbol", FontWeight.NORMAL, 14));
-        label.setText(text);
-        label.setPadding(new Insets(10,10,10,30));
-        label.setMinWidth(518);
-        label.setStyle(Styling.LABEL_STYLE);
+        label.setFont(Font.font(Styling.MAIN_FONT, FontWeight.NORMAL, 15));
+        label.setPadding(new Insets(5,0,5,0));
+        label.setText("   " + text);
+        label.setMinWidth(529);
+        label.setStyle(Styling.CONTACT_ITEM_LABEL_STYLE);
 
         // image used to get rid of items
         ImageView delete = new ImageView(Images.CHECK_DEFAULT);

@@ -1,6 +1,5 @@
 package code;
 
-import com.sun.org.apache.xerces.internal.impl.xs.SchemaNamespaceSupport;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +20,9 @@ public class Main extends Application {
     // variables
     BorderPane layout = new BorderPane(); // main layout
     Pane menu = new Pane(); // menu layout
-    final int tabCount = Tab.tabNames.length;
+    final static int tabCount = Tab.tabNames.length;
+    final static int windowWidth = 750;
+    final static int windowHeight = Tab.tabHeight * tabCount;
     Rectangle[] inactiveTab = new Rectangle[tabCount];
     Rectangle[] activeTab = new Rectangle[tabCount];
     Text[] tabTitles = new Text[tabCount];
@@ -29,8 +30,8 @@ public class Main extends Application {
     EventHandler[] menuInactiveHandler = new EventHandler[tabCount];
     EventHandler[] menuActiveHandler = new EventHandler[tabCount];
     EventHandler[] menuClickedHandler = new EventHandler[tabCount];
-    Rectangle side = new Rectangle(Tab.tabWidth,Tab.tabHeight * tabCount + 1000, Styling.DEFAULT_TAB_CLR);
-    Scene scene = new Scene(layout,750,Tab.tabHeight * tabCount, Styling.BACKGROUND_CLR);
+    Rectangle side = new Rectangle(Tab.tabWidth,windowHeight + 1000, Styling.DEFAULT_TAB_CLR);
+    Scene scene = new Scene(layout,windowWidth,windowHeight, Styling.BACKGROUND_CLR);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -49,7 +50,7 @@ public class Main extends Application {
 
             // initialize tab icons
             tabTitles[i] = new Text(Tab.tabNames[i]);
-            tabTitles[i].setFont(Font.font("Symbol", FontWeight.NORMAL, 15));
+            tabTitles[i].setFont(Font.font(Styling.MAIN_FONT, FontWeight.NORMAL, 15));
             tabTitles[i].setX(50);
             tabTitles[i].setY(i * Tab.tabHeight + 32);
             tabTitles[i].setFill(Color.WHITE);
@@ -63,6 +64,8 @@ public class Main extends Application {
 
         // load to-do items in list
         ToDo.loadData();
+        Contacts.loadContacts();
+        VoiceMemo.loadMemos();
 
         // add events to tabs
         for(int i=0; i < tabCount; i++) {
@@ -89,12 +92,18 @@ public class Main extends Application {
                 public void handle(MouseEvent event) {
                     if(k == 0) {
                         layout.setCenter(Home.home());
-                    }
-                    else if(k == 1) {
+                    } else if(k == 1) {
                         layout.setCenter(ToDo.todo());
-                    }
-                    else {
-                        layout.setCenter(Home.home());
+                    } else if(k == 2) {
+                        layout.setCenter(Contacts.contacts());
+                    } else if(k == 3) {
+                        layout.setCenter(VoiceMemo.voiceMemo());
+                    } else if(k == 4) {
+                        layout.setCenter(Password.password());
+                    } else if(k == 5) {
+                        layout.setCenter(Mail.mail());
+                    } else if(k == 6) {
+                        layout.setCenter(Help.help());
                     }
                 }
             };
@@ -114,6 +123,8 @@ public class Main extends Application {
 
         primaryStage.setOnCloseRequest(e -> {
             ToDo.saveOnClose();
+            Contacts.saveOnClose();
+            VoiceMemo.saveOnClose();
             System.exit(0);
         });
     }

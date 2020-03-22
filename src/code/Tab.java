@@ -7,8 +7,7 @@ public class Tab {
 
     public static final int tabHeight = 50;
     public static final int tabWidth = 180;
-    public static final String[] tabNames = {"Home", "To Do", "Contacts", "Calculator", "Voice Memos", "Shortcuts",
-                                                "Settings"};
+    public static final String[] tabNames = {"Home", "To Do", "Contacts", "Voice Memos", "Password", "Mail", "Help"};
 
     public static Rectangle tab(double x, double y, Color color) {
         Rectangle rect = new Rectangle();

@@ -1,2 +1,3 @@
-one
-three
+Commit on GitHub
+Gradle for Project
+Readme.md
