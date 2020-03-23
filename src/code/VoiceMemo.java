@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 
 public class VoiceMemo {
 
+    // general variables
     private static BorderPane mainLayout;
     private static VBox mainTop;
     private static ScrollPane scroll = new ScrollPane();
@@ -32,6 +33,7 @@ public class VoiceMemo {
     private static LinkedList<String> recordings = new LinkedList<>();
     protected static String voiceMemosFilePath = "src/files/voice-memos.txt";
 
+    // recording variables
     private static AudioFormat format;
     private static DataLine.Info info;
     private static TargetDataLine targetDataLine;
@@ -44,13 +46,17 @@ public class VoiceMemo {
         format = new AudioFormat(16000, 8, 2, true, true);
         info = new DataLine.Info(TargetDataLine.class, format);
 
+        // checks if line is supported
         if(!AudioSystem.isLineSupported(info)) {
-            System.out.println("Line is not supported");
+            System.err.println("Line is not supported");
         }
 
+        // gets target data line
         try {
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-        } catch (Exception tdl) {}
+        } catch (Exception tdl) {
+            tdl.printStackTrace();
+        }
 
         // main layout
         mainLayout = new BorderPane();
@@ -60,6 +66,7 @@ public class VoiceMemo {
         mainTop.setStyle(Styling.SCROLL_STYLE);
         mainTop.setPadding(new Insets(15,10,0,10));
 
+        // record button
         ImageView recordIMG = new ImageView(Images.NEW_RECORDING_DEFAULT);
         recordIMG.setOnMouseEntered(e -> recordIMG.setImage(Images.NEW_RECORDING_ACTIVE));
         recordIMG.setOnMouseExited(e -> recordIMG.setImage(Images.NEW_RECORDING_DEFAULT));
@@ -79,6 +86,7 @@ public class VoiceMemo {
 
     }
 
+    // create new recording
     private static void newRecording() {
         Stage window = new Stage();
 
@@ -125,6 +133,7 @@ public class VoiceMemo {
         window.show();
     }
 
+    // records sound
     private static void recordSound(String path) {
         final String url = "src/snd/" + path + ".wav";
 
@@ -146,8 +155,6 @@ public class VoiceMemo {
         recordingWindow.setResizable(false);
         recordingWindow.getIcons().add(Images.ICON);
         recordingWindow.show();
-
-
 
         try {
             targetDataLine.open();
@@ -179,7 +186,10 @@ public class VoiceMemo {
         recordingWindow.close();
     }
 
+    // creates audio recording item
     private static HBox makeItem(String path) {
+
+        // delete recording button
         ImageView recordingDelete = new ImageView(Images.DELETE_CONTACT_DEFAULT);
         recordingDelete.setOnMouseEntered(c -> recordingDelete.setImage(Images.DELETE_CONTACT_ACTIVE));
         recordingDelete.setOnMouseExited(c -> recordingDelete.setImage(Images.DELETE_CONTACT_DEFAULT));
@@ -197,6 +207,7 @@ public class VoiceMemo {
             updateItems();
         });
 
+        // play recording button
         ImageView playButton = new ImageView(Images.PLAY_DEFAULT);
         playButton.setOnMouseEntered(c -> playButton.setImage(Images.PLAY_ACTIVE));
         playButton.setOnMouseExited(c -> playButton.setImage(Images.PLAY_DEFAULT));
@@ -204,6 +215,7 @@ public class VoiceMemo {
             playSound(path);
         });
 
+        // filename
         Label newItem = new Label("   " + path.substring(8, path.length()-4));
         newItem.setStyle(Styling.VOICE_ITEM_LABEL_STYLE);
         newItem.setFont(Font.font(Styling.MAIN_FONT, FontWeight.NORMAL, 15));
@@ -215,6 +227,7 @@ public class VoiceMemo {
         return hbox;
     }
 
+    // update items list on screen
     private static void updateItems() {
         items.getChildren().clear();
         for(String s : recordings) {
@@ -223,6 +236,7 @@ public class VoiceMemo {
         }
     }
 
+    // plays osund
     private static void playSound(String path) {
         try {
             Clip clip = AudioSystem.getClip();
@@ -230,10 +244,11 @@ public class VoiceMemo {
             clip.start();
             Thread.sleep(clip.getMicrosecondLength()/1000);
         } catch(Exception s) {
-
+            s.printStackTrace();
         }
     }
 
+    // loads all voice recording paths
     protected static void loadMemos() {
         try {
             Scanner scanner = new Scanner(new File(voiceMemosFilePath));
@@ -256,6 +271,7 @@ public class VoiceMemo {
         }
     }
 
+    // save paths to audio recordings on close
     protected static void saveOnClose() {
         try {
             PrintWriter pw = new PrintWriter(voiceMemosFilePath);

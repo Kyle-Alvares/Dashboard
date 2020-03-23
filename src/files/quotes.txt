@@ -1,12 +1,3 @@
-"Success is a well-managed failure." - Darren Jacklin
-"A winner is a dreamer who never gives up." - Nelson Mandela
-"Alone we can do so little; together we can do so much." - Helen Keller
-"Forget the failures. Keep the lessons." - Dalai Lama
-"Real men treat the janitor with the same respect as the CEO." - Michelle Obama
-"Be flexible so you can change with change." - Bruce Lee
-"Problems are not stop signs, they are guidelines." - Robert H. Schiuller
-"Yesterday you said tomorrow. Just do it." - Nike
-"Try to be a rainbow in someone’s cloud." - Maya Angelou
 "There is no substitute for hard work." - Thomas Edison
 "Strive for greatness." - Lebron James
 "A happy soul is the best shield for a cruel world." - Atticus
@@ -33,3 +24,12 @@
 "There is no growth in comfort." - Geoff Thompson
 "Listen to what you know instead of what you fear." - Richard Bach
 "Ninety-nine percent of success is built on failure." - Charles Kettering
+"Success is a well-managed failure." - Darren Jacklin
+"A winner is a dreamer who never gives up." - Nelson Mandela
+"Alone we can do so little; together we can do so much." - Helen Keller
+"Forget the failures. Keep the lessons." - Dalai Lama
+"Real men treat the janitor with the same respect as the CEO." - Michelle Obama
+"Be flexible so you can change with change." - Bruce Lee
+"Problems are not stop signs, they are guidelines." - Robert H. Schiuller
+"Yesterday you said tomorrow. Just do it." - Nike
+"Try to be a rainbow in someone’s cloud." - Maya Angelou

@@ -64,30 +64,36 @@ public class Contacts {
         mainTop = new VBox(5);
         titleTop = new GridPane();
 
+        // search icon top pane
         ImageView searchIcon = new ImageView(Images.SEARCH);
         titleTop.add(searchIcon, 0, 0);
 
+        // text top pane
         Text searchText = new Text();
         searchText.setText("Search");
         searchText.setFill(Color.WHITE);
         searchText.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 19));
         titleTop.add(searchText, 2, 0);
 
+        // refresh contacts list button
         ImageView refreshIcon = new ImageView(Images.REFRESH_DEFAULT);
         refreshIcon.setOnMouseEntered(e -> refreshIcon.setImage(Images.REFRESH_ACTIVE));
         refreshIcon.setOnMouseExited(e -> refreshIcon.setImage(Images.REFRESH_DEFAULT));
         refreshIcon.setOnMouseClicked(e -> refresh());
         titleTop.add(refreshIcon,84,0);
 
+        // create new contact button
         ImageView newIcon = new ImageView(Images.NEW_DEFAULT);
         newIcon.setOnMouseEntered(e -> newIcon.setImage(Images.NEW_ACTIVE));
         newIcon.setOnMouseExited(e -> newIcon.setImage(Images.NEW_DEFAULT));
         newIcon.setOnMouseClicked(e -> createContact());
         titleTop.add(newIcon,85,0);
 
+        // top pane settings
         titleTop.setAlignment(Pos.CENTER_LEFT);
         titleTop.setHgap(5);
 
+        // text field used to search contacts
         searchField = new TextField();
         searchField.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 14));
         searchField.setStyle(Styling.TEXTFIELD_STYLE);
@@ -101,6 +107,7 @@ public class Contacts {
             }
         });
 
+        // scroll pane settings
         scroll.setPrefSize(550, 275);
         scroll.setContent(items);
         scroll.setStyle(Styling.SCROLL_STYLE);
@@ -116,16 +123,22 @@ public class Contacts {
         return mainLayout;
     }
 
+    // creates new contact
     public static void createContact() {
+
+        // new window for creating contact
         Stage window = new Stage();
 
         BorderPane createContactLayout = new BorderPane();
 
+        // layout for text fields and labels
         GridPane contactPane = new GridPane();
         contactPane.setPadding(new Insets(35,20,0,20));
         contactPane.setVgap(10);
         contactPane.setHgap(15);
         contactPane.setStyle(Styling.BACKGROUND_STYLE);
+
+        // new contact titles, label and text fields
 
         Text newContact = new Text();
         newContact.setText("New Contact");
@@ -179,11 +192,13 @@ public class Contacts {
         registerPane.setPadding(new Insets(0,20,20,20));
         registerPane.setStyle(Styling.BACKGROUND_STYLE);
 
+        // register adds new contact to list
         Button register = new Button("Add Contact");
         register.setFont(Font.font(Styling.MAIN_FONT, FontWeight.BOLD, 15));
         register.setStyle(Styling.TEXT_BUTTON_STYLE);
         register.setOnMouseClicked(e -> {
             try {
+                // checks if fields are not left empty and if phone number is valid
                 if (fieldNotEmpty(firstNameText.getText()) && fieldNotEmpty(lastNameText.getText()) &&
                 fieldNotEmpty(phoneNumberText.getText()) && fieldNotEmpty(addressText.getText()) &&
                 validPhoneNumber(phoneNumberText.getText())) {
@@ -199,6 +214,8 @@ public class Contacts {
             } catch(Exception exception) {}
         });
 
+        // adds nodes to pane
+
         registerPane.getChildren().add(register);
 
         createContactLayout.setCenter(contactPane);
@@ -211,12 +228,14 @@ public class Contacts {
         window.show();
     }
 
+    // checks if text field is not empty
     protected static boolean fieldNotEmpty(String text) {
         if(text.charAt(0) != ' ' && text.charAt(0) != '\n')
             return true;
         return false;
     }
 
+    // checks for valid phone number
     protected static boolean validPhoneNumber(String number) {
         if(number.length() > 9) {
             int num;
@@ -234,6 +253,7 @@ public class Contacts {
         return false;
     }
 
+    // creates new contact node for display
     private static HBox makePerson(String first, String last, String phone, String address) {
         ImageView contactDelete = new ImageView(Images.DELETE_CONTACT_DEFAULT);
         contactDelete.setOnMouseEntered(c -> contactDelete.setImage(Images.DELETE_CONTACT_ACTIVE));
@@ -285,6 +305,7 @@ public class Contacts {
         return personDisplay;
     }
 
+    // loads contacts when program starts
     protected static void loadContacts() {
         try {
             Scanner scanner = new Scanner(new File(contactsFilePath));
@@ -308,6 +329,7 @@ public class Contacts {
         }
     }
 
+    // saves all changes made to contacts when program terminates
     protected static void saveOnClose() {
         try {
             PrintWriter pw = new PrintWriter(contactsFilePath);
@@ -317,6 +339,7 @@ public class Contacts {
         } catch(Exception t) {}
     }
 
+    // gets search results
     private static void searchResults(String search) {
         for(Person p : people) {
             if(p.fName.toLowerCase().equals(search.toLowerCase()) ||
@@ -327,6 +350,7 @@ public class Contacts {
         }
     }
 
+    // refreshs search results
     private static void refresh() {
         items.getChildren().clear();
         for(Person p : people) {

@@ -23,10 +23,12 @@ import java.util.Random;
 
 public class Password {
 
+    // general variables
     private static String path = "src/vid/liquid-loader.mp4";
     private static String password;
     private static TextField display = new TextField();
 
+    // media variables
     private static Media media = new Media(new File(path).toURI().toString());
     private static MediaPlayer mediaPlayer = new MediaPlayer(media);
     private static MediaView mediaView = new MediaView(mediaPlayer);
@@ -45,6 +47,7 @@ public class Password {
 
         BorderPane layout = new BorderPane();
 
+        // top left notice - icon, title
         HBox topPane = new HBox(5);
         topPane.setAlignment(Pos.CENTER_LEFT);
         topPane.setPadding(new Insets(13,0,5,20));
@@ -58,6 +61,7 @@ public class Password {
 
         topPane.getChildren().addAll(key, titleText);
 
+        // button to generate password and text field for display and to copy from
         VBox bottomPane = new VBox(5);
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(0,0,20,0));
@@ -76,7 +80,7 @@ public class Password {
         return layers;
     }
 
-
+    // lower case letter for password
     private static class LowerCase implements Runnable{
 
         private int time;
@@ -98,6 +102,7 @@ public class Password {
         }
     }
 
+    // upper case class for password
     private static class UpperCase implements Runnable{
 
         private int time;
@@ -119,10 +124,11 @@ public class Password {
         }
     }
 
+    // special characters for password
     private static class SpecialCase implements Runnable{
 
         private int time;
-        private String characters = "!@#$%^&*()_+-?";
+        private String characters = "!#$%^&*_-";
 
         public SpecialCase (int time){
             this.time = time;
@@ -141,6 +147,7 @@ public class Password {
         }
     }
 
+    // generates password
     private static void generatePassword() {
 
         Password.password = "";
@@ -152,7 +159,7 @@ public class Password {
         int time;
 
         for(int i=0; i < length / 2; i++) {
-            time = random.nextInt(100);
+            time = random.nextInt(100); // delays thread
             runners[i] = new LowerCase(time);
 
             if(time % 3 != 0) { // probability of upper case
